@@ -28,6 +28,8 @@ app.use(express.json())
 const cors = require('cors')
 app.use(cors())
 
+app.use(express.static('build'))
+
 app.get('/', (request, response) => {
   response.send('<h1>Hello</h1>')
 })
@@ -52,6 +54,9 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
+  if(persons.find(person => person.id === id) === undefined) {
+    return response.status(400).json({ error: 'item is already removed' })
+  }
   persons = persons.filter(person => person.id !== id)
   response.status(204).end()
 })
@@ -59,12 +64,15 @@ app.delete('/api/persons/:id', (request, response) => {
 app.put('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   const body = request.body
-  const thePerson = {
+  if(!persons.find(person => person.name === body.name)) {
+    return response.status(400).json({ error: `cannot update ${body.name}'s number. It is removed`})
+  }
+  const updatedPerson = {
     name: body.name,
     number: body.number,
     id: id
   }
-  persons = persons.map(person => person.id === id ? thePerson : person)
+  persons = persons.map(person => person.id === id ? updatedPerson : person)
   response.json(thePerson)
 })
 
@@ -73,20 +81,17 @@ const generateID = () =>
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
-  if(!body.name || !body.number) {
-    return response.status(400).json({ error: 'Enter both name and number fields' })
-  }
   if(persons.find(person => person.name === body.name)) {
     return response.status(400).json({ error: `${body.name} already exists`})
   }
 
-  const person = {
+  const newPerson = {
     name: body.name,
     number: body.number,
     id: generateID()
   }
-  persons.push(person)
-  response.json(person)
+  persons.push(newPerson)
+  response.json(newPerson)
 })
 
 const middlewareUnknownEndpoint = (request, response) => {
