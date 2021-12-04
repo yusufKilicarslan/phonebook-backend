@@ -1,6 +1,6 @@
 # phonebook-backend
 
-Back-end of a simple phonebook application using Express.js and MongoDB
+Backend of a simple phonebook application using Express.js and MongoDB
 
 Build directory is the production build of [this React app](https://github.com/yusufake/phonebook-frontend)
 
