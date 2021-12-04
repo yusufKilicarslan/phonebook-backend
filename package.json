@@ -7,16 +7,19 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \\\\\\\"Error: no test specified\\\\\\",
-    "build:ui": "rm -rf build && cd ../phonebook/ && npm run build --prod && cd .. && xcopy phonebook/build server-phonebook && cd server-phonebook",
+    "bld": "rmdir /Q /S build && cd ../phonebook/ && npm run build --prod && cd .. && xcopy phonebook/build server-phonebook && cd server-phonebook",
     "deploy": "git push https://git.heroku.com/salty-citadel-27533.git",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",    
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
     "logs:prod": "heroku logs --tail"
   },
   "author": "yusufake",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.14",
+    "mongoose-unique-validator": "^3.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
